@@ -1,0 +1,9 @@
+<div ng-controller="enterController">
+    <? if(!isset($email)): ?>
+        <button ng-click="enterClick()">Войти ВК</button>
+    <? else: ?>
+    <p>Email: <?= $email?></p>
+    <p>User Id: <?= $user_id?></p>
+    <button ng-click="exitClick()">Выйти</button>
+    <? endif; ?>
+</div>
