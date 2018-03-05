@@ -1,9 +1,13 @@
 <div ng-controller="enterController">
-    <? if(!isset($email)): ?>
-        <button ng-click="enterClick()">Войти ВК</button>
+    <? if($this->session->has("loggedIn")): ?>
+        <p>Email: <?= $this->session->get("email");?></p>
+        <p>User Id: <?= $this->session->get("user_id");?></p>
+        <a href="/index/logOut">
+            <button>Выйти</button>
+        </a>
     <? else: ?>
-    <p>Email: <?= $email?></p>
-    <p>User Id: <?= $user_id?></p>
-    <button ng-click="exitClick()">Выйти</button>
+        <a href="https://oauth.vk.com/authorize?client_id=6396314&display=page&redirect_uri=http://rurka.loc/vk/token&scope=docs,email&response_type=code&v=5.73">
+            <button>Войти ВК</button>
+        </a>
     <? endif; ?>
 </div>
