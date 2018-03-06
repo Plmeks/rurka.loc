@@ -1,0 +1,15 @@
+p {
+	margin-bottom: 5px;
+}
+
+.message, #loading {
+	margin-top: 5px;
+}
+
+.message {
+	color: forestgreen;
+}
+
+.message span {
+	text-transform: capitalize;
+}

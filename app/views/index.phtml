@@ -7,6 +7,7 @@
 
         <title>Phalcon PHP Framework</title>
         <link rel="shortcut icon" type="image/x-icon" href="<?php echo $this->url->get('img/favicon.ico')?>"/>
+        <? $this->assets->outputCss(); ?>
     </head>
     <body ng-app="rurka">
         <?= $this->getContent(); ?>
@@ -14,6 +15,6 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
         <script src="/public/js/index.js"></script>
-        <?php $this->assets->outputJs(); ?>
+        <? $this->assets->outputJs(); ?>
     </body>
 </html>

@@ -13,6 +13,10 @@ class IndexController extends ControllerBase
         $this->assets->addJs("public/js/index/index.js");
     }
 
+    public function widgetAction() {
+
+    }
+
     public function logOutAction() {
         $this->session->destroy();
         $this->response->redirect("/");

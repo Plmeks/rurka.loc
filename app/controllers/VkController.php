@@ -33,9 +33,10 @@ class VkController extends ControllerBase
             return;
         }
 
-        $this->session->set("loggedIn", true);
+        $this->session->set("dashboard", true);
         $this->session->set("email", $tokenResponse->email);
         $this->session->set("user_id", $tokenResponse->user_id);
+        $this->session->set("token", $tokenResponse->access_token);
 
         $user = new Users();
         $userExists = $user->findFirst([
@@ -50,5 +51,50 @@ class VkController extends ControllerBase
         }
 
         $this->response->redirect("/");
+    }
+
+    public function uploadStickerAction() {
+        $upload_server = $this->getUploadServer();
+        $upload_url = $upload_server->response->upload_url;
+        $file = $this->request->get("file");
+
+        if(!$upload_url) {
+            throw new Exception("Ошибка: не был получен upload_url");
+            return;
+        }
+
+        $vkFileResponse = $this->uploadFileVkServer($upload_url, $file);
+
+        return $this->sendJson([$vkFileResponse]);
+    }
+
+    private function getUploadServer() {
+        $token = $this->session->get("token");
+        $user_id = $this->session->get("user_id");
+
+        $uploadServer = json_decode(file_get_contents("https://api.vk.com/method/docs.getMessagesUploadServer?peer_id={$user_id}&type=graffiti&access_token={$token}&v=5.73"));
+        if(!$uploadServer) {
+            throw new Exception("Ошибка: не был получен uploadServer");
+            return;
+        }
+
+        return $uploadServer;
+    }
+
+    private function uploadFileVkServer($upload_url, $file) {
+        $curl = curl_init($upload_url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data'));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, [
+            'file' => new CURLFile($file, mime_content_type($file), basename($file))	
+        ]);
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        return $response;
     }
 }
